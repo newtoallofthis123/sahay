@@ -47,3 +47,17 @@ func (f *File) GetContents(lineNumber uint16) (string, bool) {
 
 	return f.Seek[lineNumber], true
 }
+
+func (f *File) ReplaceContents(temp *os.File) error {
+	file, err := os.OpenFile(f.file.Name(), os.O_RDWR|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+
+	_, err = io.Copy(file, temp)
+	return err
+}
+
+func (f *File) GetName() string {
+	return f.file.Name()
+}

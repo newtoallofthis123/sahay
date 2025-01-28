@@ -16,16 +16,16 @@ type ModelApi struct {
 }
 
 type ModelOptions struct {
-	ollamaUrl string
-	model     string
-	prompt    string
+	OllamaUrl string
+	Model     string
+	Prompt    string
 }
 
 func NewModelApi(opts *ModelOptions) (*ModelApi, error) {
 	var client *api.Client
 	var err error
-	if opts != nil && opts.ollamaUrl != "" {
-		baseUrl, err := url.Parse(opts.ollamaUrl)
+	if opts != nil && opts.OllamaUrl != "" {
+		baseUrl, err := url.Parse(opts.OllamaUrl)
 		if err != nil {
 			return nil, err
 		}
@@ -41,7 +41,7 @@ func NewModelApi(opts *ModelOptions) (*ModelApi, error) {
 	model := "mistral:7b"
 	prompt := defaultPrompt()
 	if opts != nil {
-		model = opts.model
+		model = opts.Model
 	}
 
 	return &ModelApi{
@@ -55,6 +55,7 @@ func (a *ModelApi) MakePrompt(raw string) string {
 	return strings.Replace(a.prompt, "[FUNCTION]", raw, 1)
 }
 
+// GetResponse processes the raw input string and returns a response string along with an error if any.
 func (a *ModelApi) GetResponse(raw string) (string, error) {
 	req := &api.GenerateRequest{
 		Model:  a.model,

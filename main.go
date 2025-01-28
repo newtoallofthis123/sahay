@@ -3,11 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"strings"
 
+	"github.com/newtoallofthis123/sahay/handler"
 	"github.com/newtoallofthis123/sahay/model"
 	"github.com/newtoallofthis123/sahay/parser"
-	"github.com/sbabiv/xml2map"
 )
 
 func main() {
@@ -19,17 +18,22 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(p.Tags)
 
 	a, err := model.NewModelApi(nil)
 	if err != nil {
 		panic(err)
 	}
-	x, err := a.GetResponse(p.File.Seek[uint16(p.Tags[2].Line)])
+
+	h := handler.NewHandler(a)
+	res, err := h.GetResponses(&p)
 	if err != nil {
 		panic(err)
 	}
-	decoder := xml2map.NewDecoder(strings.NewReader(x))
-	result, err := decoder.Decode()
-	fmt.Println(result["Comment"])
+
+	err = h.WriteToFile(&p, res)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Modified file:", p.Filename)
 }
