@@ -42,6 +42,9 @@ func NewModelApi(opts *ModelOptions) (*ModelApi, error) {
 	prompt := defaultPrompt()
 	if opts != nil {
 		model = opts.Model
+		if opts.Prompt != "" {
+			prompt = opts.Prompt
+		}
 	}
 
 	return &ModelApi{
